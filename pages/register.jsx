@@ -7,13 +7,23 @@ import { useRouter } from "next/router";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Link from "next/link";
-const Register = () => {
+const RegisterPage = () => {
   const router = useRouter();
   const schema = yup.object().shape({
+    username: yup.string().min(6).max(20).required(),
     email: yup.string().email().required().max(50).lowercase(),
     password: yup.string().min(6).max(32).required(),
-    username: yup.string().min(6).max(20).required(),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref("password"), null], "Passwords must match")
+      .required("Confirm Password is required"),
   });
+
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   const {
     register,
     handleSubmit,
@@ -23,9 +33,11 @@ const Register = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
+  const [password, confirmPassword] = watch(["password", "confirmPassword"]);
 
   const onSubmit = async (data) => {
     const base_url = process.env.NEXT_PUBLIC_URL;
+    // console.log(">>> form register <<<", data);
     await axios
       .post(`${base_url}/api/v1/auth/register`, data)
       .then((response) => {
@@ -38,6 +50,12 @@ const Register = () => {
         }
       })
       .catch((error) => {
+        console.log(error);
+        if (error.response.data.mes.code === 11000) {
+          toast(
+            `${Object.keys(error.response.data.mes.keyValue)[0]} đã tồn tại`
+          );
+        }
         if (error?.response?.data?.code == 404) {
           toast(error?.response?.data?.mes);
         }
@@ -69,6 +87,7 @@ const Register = () => {
                 />
                 {<span className="text-red-500">{errors.email?.message}</span>}
               </div>
+
               <div>
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                   Nhập username
@@ -86,23 +105,59 @@ const Register = () => {
                   </span>
                 }
               </div>
+
               <div>
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                   Nhập mật khẩu
                 </label>
 
-                <input
-                  type="password"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="..."
-                  {...register("password", { required: true })}
-                />
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="..."
+                    {...register("password", { required: true })}
+                  />
+                  {password && (
+                    <i
+                      className="fa-solid fa-eye absolute top-[50%] right-[10px] -translate-y-1/2 cursor-pointer"
+                      onClick={togglePasswordVisibility}
+                    ></i>
+                  )}
+                </div>
                 {
                   <span className="text-red-500">
                     {errors.password?.message}
                   </span>
                 }
               </div>
+
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  Xác nhận lại mật khẩu
+                </label>
+
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="..."
+                    {...register("confirmPassword", { required: true })}
+                  />
+                  {confirmPassword && (
+                    <i
+                      className="fa-solid fa-eye absolute top-[50%] right-[10px] -translate-y-1/2 cursor-pointer"
+                      onClick={togglePasswordVisibility}
+                    ></i>
+                  )}
+                </div>
+                {
+                  <span className="text-red-500">
+                    {errors.confirmPassword?.message}
+                  </span>
+                }
+              </div>
+
               <div className="flex items-start">
                 <div className="flex items-center h-5">
                   <input
@@ -118,16 +173,11 @@ const Register = () => {
                     htmlFor="terms"
                     className="font-light text-gray-500 dark:text-gray-300"
                   >
-                    Tôi đồng ý{" "}
-                    <a
-                      className="font-medium text-primary-600 hover:underline dark:text-primary-500"
-                      href="#"
-                    >
-                      Điều khoản
-                    </a>
+                    là Admin
                   </label>
                 </div>
               </div>
+
               <button
                 type="submit"
                 className="w-full text-white bg-black hover:opacity-70 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
@@ -152,4 +202,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default RegisterPage;

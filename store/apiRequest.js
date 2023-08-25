@@ -7,18 +7,28 @@ import {
   logOutStart,
 } from "./authSlice";
 import axios from "axios";
+import Cookies from "js-cookie";
 
-export const login = async (user, dispatch, router) => {
+////////////////////******************** AUTH ********************////////////////////////////
+
+export const login = async (user, dispatch, router, toast) => {
   const base_url = process.env.NEXT_PUBLIC_URL;
   dispatch(loginStart());
   try {
     const res = await axios.post(`${base_url}/api/v1/auth/login`, user);
     if (res.data.code == 200) {
+      let accessToken = res.data.data.accessToken.toString();
+      // Cookies.set("accessToken", accessToken);
       dispatch(loginSuccess(res.data.data));
+      toast("Đăng nhập thành công");
       router.push("/");
     }
-  } catch {
+  } catch (err) {
+    console.log(err);
     dispatch(loginFailed());
+    if (err?.response?.data?.code) {
+      toast(err.response.data.err.mes);
+    }
   }
 };
 

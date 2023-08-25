@@ -2,6 +2,8 @@ import { Inter } from "next/font/google";
 import Head from "next/head";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import LayoutRoot from "../components/layout";
+import Dashboard from "./Dashboard";
 const inter = Inter({ subsets: ["latin"] });
 
 const Home = (props) => {
@@ -30,16 +32,10 @@ const Home = (props) => {
           content="Web site created using create-react-app"
         />
         <meta property="og:title" content="My page title" key="title" />
-
-        {/* <script
-          async
-          defer
-          crossorigin="anonymous"
-          src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v17.0&appId=285996387018931&autoLogAppEvents=1"
-          nonce="eRCeEIuo"
-        ></script> */}
       </Head>
-      <p>Admin</p>
+      <LayoutRoot>
+        <Dashboard />
+      </LayoutRoot>
     </>
   );
 };
