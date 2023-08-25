@@ -1,21 +1,21 @@
 import { Inter } from "next/font/google";
 import Head from "next/head";
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useStore } from "../zustand/store";
 import LayoutRoot from "../components/layout";
 import Dashboard from "./Dashboard";
 const inter = Inter({ subsets: ["latin"] });
 
 const Home = (props) => {
-  const user = useSelector((state) => state.auth.login?.currentUser);
-  useEffect(() => {
-    if (!user) {
-      // navigate("/login");
-    }
-    if (user?.accessToken) {
-      // getAllUsers(user?.accessToken, dispatch, axiosJWT);
-    }
-  }, []);
+  const [state, setState] = useState({
+    username: "",
+    password: "",
+  });
+  console.log("check state ", state);
+  const info = useStore((store) => store.info);
+
+  const addUser = useStore((store) => store.addUser);
+  console.log(">>>Check info user", info);
   return (
     <>
       <Head>
@@ -36,6 +36,37 @@ const Home = (props) => {
       <LayoutRoot>
         <Dashboard />
       </LayoutRoot>
+      <div>
+        <p>Du lieu trong kho zustand : {info && info[0]?.username}</p>
+        <input
+          className="border border-green-400"
+          type="text"
+          value={state.username}
+          onChange={(e) =>
+            setState((prev) => ({ ...prev, username: e.target.value }))
+          }
+        />
+        <input
+          className="border border-green-400"
+          type="text"
+          value={state.password}
+          onChange={(e) =>
+            setState((prev) => ({ ...prev, password: e.target.value }))
+          }
+        />
+        <button
+          className="bg-red-500"
+          onClick={() => {
+            addUser(state.username, state.password);
+            setState({
+              username: "",
+              password: "",
+            });
+          }}
+        >
+          Submit
+        </button>
+      </div>
     </>
   );
 };

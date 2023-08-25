@@ -14,10 +14,6 @@ export default function App({ Component, pageProps }) {
   // }, [router.pathname, router.query.page, router.asPath]);
 
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
         <Component {...pageProps} />
-      </PersistGate>
-    </Provider>
   );
 }
