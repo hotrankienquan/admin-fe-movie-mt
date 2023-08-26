@@ -218,8 +218,6 @@ export default ManageFilm;
 
 export async function getServerSideProps(context) {
   // if need accesstoken, get here
-  // nếu api nào cần verify token, thì gắn accesstoken này vào rồi call api
-  // console.log(context.req.cookies.accessToken) // get cookie accessToken
   let allMovie = await axios.get(`${process.env.NEXT_PUBLIC_URL}/api/v1/movie`);
   let allCategory = await axios.get(
     `${process.env.NEXT_PUBLIC_URL}/api/v1/category`
