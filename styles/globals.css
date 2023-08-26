@@ -46,6 +46,24 @@ body {
   /* background-color: #424040; */
 }
 
+.sidebar_manage_info::-webkit-scrollbar {
+  width: 7px;
+  height: 6px;
+}
+.sidebar_manage_info::-webkit-scrollbar-thumb {
+  /*thanh scroll*/
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 50px;
+  /* max-height: 50%; */
+  /* height: 200px; */
+  width: 50px;
+}
+.sidebar_manage_info::-webkit-scrollbar-track {
+  /*thanh contain scroll*/
+  background-color: #ccc;
+  border-radius: 50px;
+}
+
 /* SIDEBAR MANAGE INFO USER */
 .side-navigation-panel {
 }
@@ -58,6 +76,8 @@ body {
 }
 .side-navigation-panel-select-option {
   border: none !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
 }
 .side-navigation-panel-select-option:hover
   .side-navigation-panel-select-option-wrap {
@@ -68,6 +88,9 @@ body {
 }
 .side-navigation-panel-select-option-wrap {
   color: #8699ad;
+}
+.side-navigation-panel-select-option-text {
+  font-size: 15px;
 }
 .side-navigation-panel-select-option-icon.side-navigation-panel-select-option-icon-chevron-down {
   color: #8699ad;

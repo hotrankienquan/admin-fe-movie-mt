@@ -5,6 +5,7 @@ import { createAxios } from "../../utils/createInstance";
 import { logOutSuccess } from "../../store/authSlice";
 import { logOut } from "../../store/apiRequest";
 import { useRouter } from "next/router";
+import { useStore } from "../../zustand/store";
 
 const HeaderManageInfo = ({ showSideBar, setShowSideBar }) => {
   // console.log(showSideBar);
@@ -13,23 +14,28 @@ const HeaderManageInfo = ({ showSideBar, setShowSideBar }) => {
 
   const user = useSelector((state) => state.auth.login.currentUser);
   // console.log(">>> Header Manage Info <<<", user);
-  const accessToken = user?.accessToken;
-  const id = user?._id;
+  const userId = user?._id;
+
+  const info = useStore((store) => store.info);
+  const logoutUser = useStore((store) => store.logoutUser);
+
   let axiosJWT = createAxios(user, dispatch, logOutSuccess);
 
   const [searchInput, setSearchInput] = useState("");
+
+  const handleShowSideBar = (e) => {
+    e.preventDefault();
+    setShowSideBar((prev) => !prev);
+  };
 
   const handleSearchInput = (e) => {
     const { name, value } = e.target;
     setSearchInput(value);
   };
+
   const handleLogout = (e) => {
     e.preventDefault();
-    logOut(dispatch, id, router, accessToken, axiosJWT);
-  };
-  const handleShowSideBar = (e) => {
-    e.preventDefault();
-    setShowSideBar((prev) => !prev);
+    logOut(dispatch, userId, router, logoutUser);
   };
 
   return (
@@ -80,7 +86,8 @@ const HeaderManageInfo = ({ showSideBar, setShowSideBar }) => {
               <div className="max-w-[80%] w-full">
                 <span className="font-bold ">
                   <p className="whitespace-nowrap text-ellipsis overflow-hidden">
-                    {user?.username || "tunadayy"}
+                    {/* {user?.username || "unknow"} */}
+                    {info[0]?.username || "unknow"}
                   </p>
                 </span>
                 <span className="flex items-center text-xs mt-[4px] col-span-1">

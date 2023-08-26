@@ -7,13 +7,12 @@ import Dashboard from "./Dashboard";
 const inter = Inter({ subsets: ["latin"] });
 
 const Home = (props) => {
-  const [state, setState] = useState({
-    username: "",
-    password: "",
-  });
-  console.log("check state ", state);
+  // const [state, setState] = useState({
+  //   username: "",
+  //   password: "",
+  // });
+  // console.log("check state ", state);
   const info = useStore((store) => store.info);
-
   const addUser = useStore((store) => store.addUser);
   console.log(">>>Check info user", info);
   return (
@@ -36,7 +35,8 @@ const Home = (props) => {
       <LayoutRoot>
         <Dashboard />
       </LayoutRoot>
-      <div>
+
+      {/* <div>
         <p>Du lieu trong kho zustand : {info && info[0]?.username}</p>
         <input
           className="border border-green-400"
@@ -66,7 +66,7 @@ const Home = (props) => {
         >
           Submit
         </button>
-      </div>
+      </div> */}
     </>
   );
 };

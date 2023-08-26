@@ -8,24 +8,27 @@ import {
 } from "./authSlice";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useStore } from "../zustand/store";
 
 ////////////////////******************** AUTH ********************////////////////////////////
 
-export const login = async (user, dispatch, router, toast) => {
+export const login = async (user, addUser, router, toast) => {
   const base_url = process.env.NEXT_PUBLIC_URL;
-  dispatch(loginStart());
+  // dispatch(loginStart());
+
   try {
     const res = await axios.post(`${base_url}/api/v1/auth/login`, user);
     if (res.data.code == 200) {
       let accessToken = res.data.data.accessToken.toString();
       // Cookies.set("accessToken", accessToken);
-      dispatch(loginSuccess(res.data.data));
+      // dispatch(loginSuccess(res.data.data));
+      addUser(res.data.data);
       toast("Đăng nhập thành công");
       router.push("/");
     }
   } catch (err) {
     console.log(err);
-    dispatch(loginFailed());
+    // dispatch(loginFailed());
     if (err?.response?.data?.code) {
       toast(err.response.data.err.mes);
     }
@@ -68,16 +71,17 @@ export const deleteUser = async (id, dispatch, token) => {
   }
 };
 
-export const logOut = async (dispatch, id, router, accessToken, axiosJWT) => {
+export const logOut = async (dispatch, id, router, logoutUser) => {
   const base_url = process.env.NEXT_PUBLIC_URL;
-  dispatch(logOutStart());
+  // dispatch(logOutStart());
   try {
-    await axiosJWT.post(`${base_url}/api/v1/auth/logout`, id, {
-      headers: { token: `Bearer ${accessToken}` },
-    });
-    dispatch(logOutSuccess());
+    await axios.post(`${base_url}/api/v1/auth/logout`, id);
+    // Cookies.remove("accessToken");
+    // dispatch(logOutSuccess());
+    logoutUser();
     router.push("/");
   } catch (err) {
-    dispatch(logOutFailed());
+    // dispatch(logOutFailed());
+    console.log(err);
   }
 };

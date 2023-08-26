@@ -10,7 +10,7 @@ const SidebarManageInfo = ({ showSideBar }) => {
   const [activeSubmenu, setActiveSubmenu] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const router = useRouter();
-  console.log(router);
+  // console.log(router);
 
   // tabs parent dont have submenu
   const handleDropdownClick = (index) => {
@@ -41,11 +41,11 @@ const SidebarManageInfo = ({ showSideBar }) => {
     <div className={`${showSideBar ? "block hehe" : "hidden"}`}>
       <div className="fixed top-[70px] bottom-0 w-[240px] bg-[#2b3a4a] z-50 transition-transform -translate-x-full sm:translate-x-0">
         {/* https://github.com/abhijithvijayan/react-minimal-side-navigation */}
-        <div className="h-full px-3 py-4 overflow-y-auto">
+        <div className="sidebar_manage_info h-full px-3 py-4 overflow-y-auto">
           <Navigation
             activeItemId={router.asPath}
             onSelect={({ itemId }) => {
-              console.log(itemId);
+              // console.log(itemId);
               if (itemId === "/about") {
                 return;
               }
@@ -54,38 +54,58 @@ const SidebarManageInfo = ({ showSideBar }) => {
             items={[
               {
                 title: "Dashboard",
-                itemId: `${router.asPath}`,
+                itemId: `/`,
                 // Optional
                 elemBefore: () => (
                   <>
-                    <i className="fa-solid fa-cart-shopping"></i>
+                    <i className="fa-solid fa-house"></i>
                   </>
                 ),
               },
               {
-                title: "About",
-                itemId: "/about",
-                elemBefore: () => <i className="fa-solid fa-cart-shopping"></i>,
-                subNav: [
-                  {
-                    title: "Projects",
-                    itemId: "/about/projects",
-                    // Optional
-                    elemBefore: () => (
-                      <>
-                        <i className="fa-solid fa-cart-shopping"></i>
-                      </>
-                    ),
-                  },
-                  {
-                    title: "Members",
-                    itemId: "/about/members",
-                    elemBefore: () => (
-                      <i className="fa-solid fa-cart-shopping"></i>
-                    ),
-                  },
-                ],
+                title: "Manage Film",
+                itemId: `/manageFilm`,
+                // Optional
+                elemBefore: () => (
+                  <>
+                    <i className="fa-solid fa-film"></i>
+                  </>
+                ),
               },
+              {
+                title: "Manage Account User",
+                itemId: `/manageAccountUser`,
+                // Optional
+                elemBefore: () => (
+                  <>
+                    <i className="fa-solid fa-user"></i>
+                  </>
+                ),
+              },
+              // {
+              //   title: "About",
+              //   itemId: "/about",
+              //   elemBefore: () => <i className="fa-solid fa-cart-shopping"></i>,
+              //   subNav: [
+              //     {
+              //       title: "Projects",
+              //       itemId: "/about/projects",
+              //       // Optional
+              //       elemBefore: () => (
+              //         <>
+              //           <i className="fa-solid fa-cart-shopping"></i>
+              //         </>
+              //       ),
+              //     },
+              //     {
+              //       title: "Members",
+              //       itemId: "/about/members",
+              //       elemBefore: () => (
+              //         <i className="fa-solid fa-cart-shopping"></i>
+              //       ),
+              //     },
+              //   ],
+              // },
               // {
               //   title: "Another Tab",
               //   itemId: "/another",

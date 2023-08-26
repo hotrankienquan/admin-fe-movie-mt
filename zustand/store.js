@@ -1,38 +1,38 @@
-import { create } from 'zustand';
-import { devtools, persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { devtools, persist } from "zustand/middleware";
 
 const store = (set) => ({
-    info: [{
-        username:"kienquan",
-        password:"123123"
-    }],
-    addUser: (username,password) => {
-        set(store => ({
-            info: [...store.info, {username,password}]
-        }))
-    }
-//   tasks: [],
-//   addTask: (title, state) =>
-//     set(
-//       produce((store) => {
-//         store.tasks.push({ title, state });
-//       }),
-//       //(store) => ({ tasks: [...store.tasks, { title, state }] }),
-//       false,
-//       'addTask'
-//     ),
-//   deleteTask: (title) =>
-//     set((store) => ({
-//       tasks: store.tasks.filter((task) => task.title !== title),
-//     })),
- 
-  
+  info: [{}],
+  addUser: (dataUser) => {
+    set((store) => ({
+      info: [{ ...dataUser }],
+    }));
+  },
+  logoutUser: () => {
+    set((store) => ({
+      info: [{}],
+    }));
+  },
+  //   tasks: [],
+  //   addTask: (title, state) =>
+  //     set(
+  //       produce((store) => {
+  //         store.tasks.push({ title, state });
+  //       }),
+  //       //(store) => ({ tasks: [...store.tasks, { title, state }] }),
+  //       false,
+  //       'addTask'
+  //     ),
+  //   deleteTask: (title) =>
+  //     set((store) => ({
+  //       tasks: store.tasks.filter((task) => task.title !== title),
+  //     })),
 });
 
 const log = (config) => (set, get, api) =>
   config(
     (...args) => {
-      console.log(args);
+      // console.log(args);
       set(...args);
     },
     get,
@@ -40,6 +40,5 @@ const log = (config) => (set, get, api) =>
   );
 
 export const useStore = create(
-  (log(persist(devtools(store), { name: 'my zustand store' })))
+  log(persist(devtools(store), { name: "my zustand store" }))
 );
-

@@ -10,10 +10,13 @@ import { useDispatch } from "react-redux";
 import { login } from "../store/apiRequest";
 import Link from "next/link";
 import Cookies from "js-cookie";
+import { useStore } from "../zustand/store";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const addUser = useStore((store) => store.addUser);
+
   const schema = yup.object().shape({
     password: yup.string().min(6).max(32).required(),
     username: yup.string().min(6).max(20).required(),
@@ -37,6 +40,7 @@ const LoginPage = () => {
   const onSubmit = async (data) => {
     console.log(">>> Data LOGIN <<<", data);
     // login(data, dispatch, router, toast);
+    login(data, addUser, router, toast);
   };
 
   useEffect(() => {
