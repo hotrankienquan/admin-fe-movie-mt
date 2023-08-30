@@ -12,14 +12,13 @@ const HeaderManageInfo = ({ showSideBar, setShowSideBar }) => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const user = useSelector((state) => state.auth.login.currentUser);
-  // console.log(">>> Header Manage Info <<<", user);
-  const userId = user?._id;
+  // const user = useSelector((state) => state.auth.login.currentUser);
+  // // console.log(">>> Header Manage Info <<<", user);
+  // const userId = user?._id;
 
   const info = useStore((store) => store.info);
+  const userId = info[0]?._id;
   const logoutUser = useStore((store) => store.logoutUser);
-
-  let axiosJWT = createAxios(user, dispatch, logOutSuccess);
 
   const [searchInput, setSearchInput] = useState("");
 

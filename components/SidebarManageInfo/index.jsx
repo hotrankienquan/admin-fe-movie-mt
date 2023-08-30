@@ -11,6 +11,7 @@ const SidebarManageInfo = ({ showSideBar }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const router = useRouter();
   // console.log(router);
+  // console.log(router.asPath.startsWith(router.pathname));
 
   // tabs parent dont have submenu
   const handleDropdownClick = (index) => {
@@ -37,13 +38,17 @@ const SidebarManageInfo = ({ showSideBar }) => {
     setActiveSubmenu(index);
   };
 
+  const originalPath = router.pathname;
+  const parts = originalPath.split("/");
+  const modifiedPath = `/${parts[1]}`; // Lấy phần tử đầu tiên và thêm dấu /
+  // console.log(modifiedPath); // Output: "/manageFilm"
   return (
     <div className={`${showSideBar ? "block hehe" : "hidden"}`}>
       <div className="fixed top-[70px] bottom-0 w-[240px] bg-[#2b3a4a] z-50 transition-transform -translate-x-full sm:translate-x-0">
         {/* https://github.com/abhijithvijayan/react-minimal-side-navigation */}
         <div className="sidebar_manage_info h-full px-3 py-4 overflow-y-auto">
           <Navigation
-            activeItemId={router.asPath}
+            activeItemId={modifiedPath}
             onSelect={({ itemId }) => {
               // console.log(itemId);
               if (itemId === "/about") {
@@ -73,8 +78,8 @@ const SidebarManageInfo = ({ showSideBar }) => {
                 ),
               },
               {
-                title: "Manage Account User",
-                itemId: `/manageAccountUser`,
+                title: "Manage Account",
+                itemId: `/manageAccount`,
                 // Optional
                 elemBefore: () => (
                   <>

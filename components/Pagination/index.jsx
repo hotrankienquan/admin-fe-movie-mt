@@ -1,7 +1,6 @@
 export default function Pagination({ paginationData, visiblePage = 4 }) {
-  const { currentPage, setCurrentPage } = paginationData;
+  const { currentPage, totalPages, setCurrentPage } = paginationData;
 
-  const totalPages = 10;
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };

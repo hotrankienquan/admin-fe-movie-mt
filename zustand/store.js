@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
 const store = (set) => ({
-  info: [{}],
+  info: [],
   addUser: (dataUser) => {
     set((store) => ({
       info: [{ ...dataUser }],
@@ -10,7 +10,7 @@ const store = (set) => ({
   },
   logoutUser: () => {
     set((store) => ({
-      info: [{}],
+      info: [],
     }));
   },
   //   tasks: [],

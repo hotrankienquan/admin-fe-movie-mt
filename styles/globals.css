@@ -46,11 +46,13 @@ body {
   /* background-color: #424040; */
 }
 
-.sidebar_manage_info::-webkit-scrollbar {
+.sidebar_manage_info::-webkit-scrollbar,
+.scroll_desc::-webkit-scrollbar {
   width: 7px;
   height: 6px;
 }
-.sidebar_manage_info::-webkit-scrollbar-thumb {
+.sidebar_manage_info::-webkit-scrollbar-thumb,
+.scroll_desc::-webkit-scrollbar-thumb {
   /*thanh scroll*/
   background-color: rgba(0, 0, 0, 0.7);
   border-radius: 50px;
@@ -58,7 +60,8 @@ body {
   /* height: 200px; */
   width: 50px;
 }
-.sidebar_manage_info::-webkit-scrollbar-track {
+.sidebar_manage_info::-webkit-scrollbar-track,
+.scroll_desc::-webkit-scrollbar-track {
   /*thanh contain scroll*/
   background-color: #ccc;
   border-radius: 50px;
@@ -131,7 +134,14 @@ body {
   color: black !important;
 }
 /* //////////////////////////////////////////////////////////////////////////////// */
-
+.players-container > div {
+  width: 100% !important;
+  height: 600px !important;
+}
+.players-container iframe {
+  width: 100% !important;
+  height: 600px !important;
+}
 /* :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;

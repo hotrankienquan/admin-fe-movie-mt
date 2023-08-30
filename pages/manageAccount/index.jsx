@@ -1,68 +1,55 @@
 import React, { useEffect, useState } from "react";
-import LayoutRoot from "../../components/layout";
-import { useStore } from "../../zustand/store";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import Pagination from "../../components/Pagination";
 import { useRouter } from "next/router";
 import axios from "axios";
-import Movie from "./components/Movie";
+import Account from "./components/Account";
+import { useStore } from "../../zustand/store";
 import { createAxios } from "../../utils/createInstance";
-import { getAllMovies } from "../../services/adminRequest";
+import { getAllMovies, getAllUsers } from "../../services/adminRequest";
 import ProtectedRoute from "../../utils/ProtectedRoutes";
+import LayoutRoot from "../../components/layout";
+import Pagination from "../../components/Pagination";
 
-// const arrMovies = [
+// const arrAccount = [
 //   {
 //     id: 1,
-//     title: "Cá mập bạo chúa",
-//     desc: "phim nói về con cá mập khổng lồ...",
-//     author: ["ben while", "nolan"],
-//     actors: ["tan", "tuan"],
-//     category: ["kinh di", "sieu nhien"],
-//     photo: [
-//       "https://d1j8r0kxyu9tj8.cloudfront.net/files/1618301042CTBAF7i4v3cXFfn.jpg",
-//     ],
-//     video: [],
-//     trailer: [],
-//     quaility: "hd",
-//     rating: 7,
-//     yearPublish: 2023,
-//     timeVideo: "1h30p",
-//     country: "Viet Nam",
-//     listUserRating: [],
+//     username: "tonystark",
+//     email: "kienquan@gmail.com",
+//     isAdmin: "false",
+//     loveMovie: [],
+//     markBookMovie: [],
+//     avatar:
+//       "https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-6/329103902_1170346807183250_1864135939632522915_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=05he3j1BiSQAX_XsqVm&_nc_ht=scontent.fsgn8-4.fna&oh=00_AfAGXxGqcH7svVCmuIixV32Hv0Bdl-wtIZVWRQWPyrR7xQ&oe=64E93359",
+//     familyName: "Tuan",
+//     givenName: "Tran",
+//     national: "viet nam",
 //     disabled: false,
 //   },
 //   {
 //     id: 2,
-//     title: "Peaky Blinder",
-//     desc: "phim nói về máy dập Anh Quốc...",
-//     author: ["murphy", "nolan"],
-//     actors: ["tan", "tuan"],
-//     category: ["tâm lý", "hành động"],
-//     photo: [
-//       "https://www.tallengestore.com/cdn/shop/products/PeakyBlinders-ThomasShelby-GarrisonBombing-NetflixTVShow-ArtPoster_7fef60c1-eddd-41e8-89fd-ac6edeba5038.jpg?v=1619864662",
-//     ],
-//     video: [],
-//     trailer: [],
-//     quaility: "hd",
-//     rating: 7,
-//     yearPublish: 2023,
-//     timeVideo: "1h30p",
-//     country: "Viet Nam",
-//     listUserRating: [],
-//     disabled: true,
+//     username: "captain",
+//     email: "captain@gmail.com",
+//     isAdmin: "false",
+//     loveMovie: [],
+//     markBookMovie: [],
+//     avatar:
+//       "https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-6/329103902_1170346807183250_1864135939632522915_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=05he3j1BiSQAX_XsqVm&_nc_ht=scontent.fsgn8-4.fna&oh=00_AfAGXxGqcH7svVCmuIixV32Hv0Bdl-wtIZVWRQWPyrR7xQ&oe=64E93359",
+//     familyName: "america",
+//     givenName: "capuchino",
+//     national: "viet nam",
+//     disabled: false,
 //   },
 // ];
 
-const ManageFilm = ({}) => {
-  // console.log(">>> CATEGORIES <<<", categories);
+const ManageAccount = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pageNumber = searchParams.get("page");
 
-  const [arrMovies, setArrMovies] = useState([]);
-  const [totalFilm, setTotalFilm] = useState(0);
-  // console.log(arrMovies);
+  const [arrAccount, setArrAccount] = useState([]);
+  const [totalAccount, setTotalAccount] = useState(0);
+  // console.log(arrAccount);
 
   const [currentPage, setCurrentPage] = useState(parseInt(pageNumber) || 1);
   const [pageSize, setPageSize] = useState(30);
@@ -75,9 +62,10 @@ const ManageFilm = ({}) => {
   const [formFilter, setFormFilter] = useState({
     filterDisabled: "",
     filterSort: 0,
+    filterIsAdmin: "",
   });
   //   console.log(formFilter);
-  const { filterDisabled, filterSort } = formFilter;
+  const { filterDisabled, filterSort, filterIsAdmin } = formFilter;
   // console.log(">>> filterDisabled <<<", filterDisabled);
   // console.log(">>> filterSort <<<", filterSort);
 
@@ -88,19 +76,19 @@ const ManageFilm = ({}) => {
   const handleSubmitSearchInput = async (e) => {
     e.preventDefault();
     try {
-      const allMovie = await getAllMovies(
+      const allAccount = await getAllMovies(
         axiosJWT,
         accessToken,
         currentPage,
         pageSize,
         searchInput
       );
-      console.log(">>> Results Search <<<", allMovie);
-      if (allMovie.data.code === 200) {
-        // console.log(">>> Results Search <<<", res.data.data.movies);
-        setArrMovies(allMovie.data.data.movie);
-        setTotalPages(Math.ceil(allMovie.data.data.totalCount / pageSize));
-        setTotalFilm(allMovie.data.data.totalCount);
+      console.log(">>> Results Search <<<", allAccount);
+      if (allAccount.data.code === 200) {
+        // console.log(">>> Results Search <<<", res.data.data.users);
+        setArrAccount(allAccount.data.data.users);
+        setTotalPages(Math.ceil(allAccount.data.data.totalCount / pageSize));
+        setTotalAccount(allAccount.data.data.totalCount);
       }
     } catch (err) {
       console.log(err);
@@ -131,7 +119,7 @@ const ManageFilm = ({}) => {
           searchParam = searchInput;
         }
 
-        const allMovie = await getAllMovies(
+        const allAccount = await getAllUsers(
           axiosJWT,
           accessToken,
           currentPage,
@@ -140,12 +128,12 @@ const ManageFilm = ({}) => {
           searchParam
         );
 
-        console.log(">>> Results Search <<<", allMovie);
-        if (allMovie.data.code === 200) {
-          // console.log(">>> Results Search <<<", res.data.data.movies);
-          setArrMovies(allMovie.data.data.movie);
-          setTotalPages(Math.ceil(allMovie.data.data.totalCount / pageSize));
-          setTotalFilm(allMovie.data.data.totalCount);
+        console.log(">>> Results Search <<<", allAccount);
+        if (allAccount.data.code === 200) {
+          // console.log(">>> Results Search <<<", res.data.data.users);
+          setArrAccount(allAccount.data.data.users);
+          setTotalPages(Math.ceil(allAccount.data.data.totalCount / pageSize));
+          setTotalAccount(allAccount.data.data.totalCount);
         }
       } catch (err) {
         console.log(err);
@@ -163,7 +151,7 @@ const ManageFilm = ({}) => {
   ]);
 
   useEffect(() => {
-    router.push(`/manageFilm/?page=${currentPage}`);
+    router.push(`/manageAccount/?page=${currentPage}`);
   }, [currentPage]);
 
   return (
@@ -171,7 +159,7 @@ const ManageFilm = ({}) => {
       <LayoutRoot>
         <div className="px-[12px]">
           <div className="mb-3">
-            <h2 className="text-lg font-semibold">QUẢN LÝ PHIM</h2>
+            <h2 className="text-lg font-semibold">QUẢN LÝ TÀI KHOẢN</h2>
           </div>
 
           <div className="mb-7 flex items-center justify-between">
@@ -182,7 +170,7 @@ const ManageFilm = ({}) => {
                   className="h-[38px] px-[20px] py-[6px] border-[1px] border-black rounded-[30px] placeholder:italic placeholder:text-xs"
                   type="text"
                   name="searchInput"
-                  placeholder="tên phim, đạo diễn, diễn viên"
+                  placeholder="username..."
                   value={searchInput}
                   onChange={handleSearchInput}
                 />
@@ -201,8 +189,22 @@ const ManageFilm = ({}) => {
                   onChange={handleChangeFilter}
                 >
                   <option value="">Tất cả</option>
-                  <option value={false}>Hiện</option>
-                  <option value={true}>Ẩn</option>
+                  <option value={false}>Kích hoạt</option>
+                  <option value={true}>Khóa</option>
+                </select>
+              </div>
+
+              <div className="mr-2">
+                <label className="mr-2">isAdmin</label>
+                <select
+                  className=" border-[1px] border-black"
+                  name="filterIsAdmin"
+                  value={filterIsAdmin}
+                  onChange={handleChangeFilter}
+                >
+                  <option value="">Tất cả</option>
+                  <option value={false}>User</option>
+                  <option value={true}>Admin</option>
                 </select>
               </div>
 
@@ -220,17 +222,17 @@ const ManageFilm = ({}) => {
               </div>
             </div>
 
-            <Link
+            {/* <Link
               href="/addFilm"
               className="py-[6px] px-[12px] font-normal text-base text-white bg-[#009688] rounded hover:opacity-70"
             >
               Thêm phim
-            </Link>
+            </Link> */}
           </div>
 
           <div>
             <p className="font-semibold italic">
-              Tổng số lượng phim: {totalFilm}
+              Tổng số lượng tài khoản: {totalAccount}
             </p>
           </div>
 
@@ -239,16 +241,19 @@ const ManageFilm = ({}) => {
               <thead className="text-white bg-[#3e5265]">
                 <tr className="h-[70px] whitespace-nowrap">
                   <th className="px-2 w-[150px] border border-slate-400">ID</th>
-                  <th className="px-2 w-[350px] border border-slate-400">
-                    Tên phim
+                  <th className="px-2 w-[300px] border border-slate-400">
+                    Username
                   </th>
-                  <th className="px-2 w-[250px] border border-slate-400">
-                    Poster
+                  <th className="px-2 w-[400px] border border-slate-400">
+                    Email
+                  </th>
+                  <th className="px-2 w-[150px] border border-slate-400">
+                    isAdmin
                   </th>
                   <th className="px-2 w-[200px] border border-slate-400">
-                    Thời lượng
+                    Quốc gia
                   </th>
-                  <th className="px-2 w-[200px] border border-slate-400">
+                  <th className="px-2 w-[150px] border border-slate-400">
                     Trạng thái
                   </th>
                   <th className="px-2 w-[200px] border border-slate-400">
@@ -258,12 +263,12 @@ const ManageFilm = ({}) => {
               </thead>
 
               <tbody>
-                {arrMovies.map((item, index) => (
-                  <Movie
+                {arrAccount.map((item, index) => (
+                  <Account
                     key={index}
                     item={item}
                     index={index}
-                    setArrMovies={setArrMovies}
+                    setArrAccount={setArrAccount}
                   />
                 ))}
               </tbody>
@@ -285,18 +290,18 @@ const ManageFilm = ({}) => {
   );
 };
 
-export default ManageFilm;
+export default ManageAccount;
 
 export async function getServerSideProps(context) {
   // if need accesstoken, get here
   // nếu api nào cần verify token, thì gắn accesstoken này vào rồi call api
   // console.log(context.req.cookies.accessToken) // get cookie accessToken
-  // let allCategory = await axios.get(
-  //   `${process.env.NEXT_PUBLIC_URL}/api/v1/category`
-  // );
+  //   let allCategory = await axios.get(
+  //     `${process.env.NEXT_PUBLIC_URL}/api/v1/category`
+  //   );
   return {
     props: {
-      // categories: allCategory.data.data,
+      //   categories: allCategory.data.data,
     },
   };
 }

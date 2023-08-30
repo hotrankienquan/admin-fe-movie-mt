@@ -4,16 +4,15 @@ import { useEffect, useState } from "react";
 import { useStore } from "../zustand/store";
 import LayoutRoot from "../components/layout";
 import Dashboard from "./Dashboard";
+import ProtectedRoute from "../utils/ProtectedRoutes";
 const inter = Inter({ subsets: ["latin"] });
 
 const Home = (props) => {
-  // const [state, setState] = useState({
-  //   username: "",
-  //   password: "",
-  // });
-  // console.log("check state ", state);
   const info = useStore((store) => store.info);
   const addUser = useStore((store) => store.addUser);
+  const accessToken = info[0]?.accessToken;
+
+  console.log(">>>Check info accessToken", accessToken);
   console.log(">>>Check info user", info);
   return (
     <>
@@ -32,9 +31,12 @@ const Home = (props) => {
         />
         <meta property="og:title" content="My page title" key="title" />
       </Head>
-      <LayoutRoot>
-        <Dashboard />
-      </LayoutRoot>
+
+      <ProtectedRoute>
+        <LayoutRoot>
+          <Dashboard />
+        </LayoutRoot>
+      </ProtectedRoute>
 
       {/* <div>
         <p>Du lieu trong kho zustand : {info && info[0]?.username}</p>

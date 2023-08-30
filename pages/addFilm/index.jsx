@@ -54,7 +54,11 @@ const AddFilm = ({ categories }) => {
   //   const [password] = watch(["password"]);
 
   const removeAccents = (str) => {
-    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    return str
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace("Đ", "D")
+      .replace("đ", "d");
   };
   const becomeSlug = (str) => {
     const nonDiacriticString = str
