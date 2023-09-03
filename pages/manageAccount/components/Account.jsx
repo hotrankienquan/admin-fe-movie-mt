@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Account = ({ item, index, setArrAccount }) => {
+const Account = ({ item, index, setArrAccount, toast }) => {
   const router = useRouter();
   const info = useStore((store) => store.info);
   //   console.log(info[0]);
@@ -25,11 +25,11 @@ const Account = ({ item, index, setArrAccount }) => {
             prevAccounts.filter((account) => account._id !== accountId)
           );
         }
-        alert(res?.data);
+        toast(res?.data);
       }
     } catch (err) {
       console.log(err);
-      alert(err);
+      toast(err);
     }
   };
 
@@ -58,7 +58,7 @@ const Account = ({ item, index, setArrAccount }) => {
         });
         return updatedMovies;
       });
-      alert(res?.data?.message);
+      toast(res?.data?.message);
     } catch (err) {
       console.log(err);
     }

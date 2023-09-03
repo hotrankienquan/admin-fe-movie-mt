@@ -25,7 +25,8 @@ const DetailFilm = ({ nameFilm }) => {
     { id: 4, name: "Đạo diễn", text: movie.author },
     { id: 5, name: "Diễn viên", text: movie.actors },
     { id: 6, name: "Quốc gia", text: movie.country },
-    { id: 7, name: "Lượt xem", text: movie.views },
+    { id: 7, name: "Giải thưởng", text: movie.awards },
+    { id: 8, name: "Lượt xem", text: movie.views },
   ];
 
   useEffect(() => {
@@ -90,10 +91,10 @@ const DetailFilm = ({ nameFilm }) => {
           {/* RIGHT */}
           <div className="col-span-2">
             <div className=" py-[10px] rounded-md bg-[#1b2d58]">
-              <div className="h-full px-[15px]">
-                <span className="block w-full">
+              <div className="h-[400px] px-[15px]">
+                <span className="block w-full h-full">
                   <img
-                    className="block w-full h-full"
+                    className="block w-full h-full object-cover"
                     src={poster}
                     alt="poster"
                   />
@@ -152,7 +153,9 @@ const DetailFilm = ({ nameFilm }) => {
                 <div className="bg-[#e94a68] py-[9px] px-[15px] mx-[15px] rounded-[4px] text-center">
                   <div>
                     <span>
-                      <b>7.82</b> of <b>10</b> (<span>2754</span> 2,754 reviews)
+                      {/* <b>7.82</b> of <b>10</b> (<span>2754</span> 2,754 reviews) */}
+                      <b>{movie.rating}</b> of <b>10</b> ({" "}
+                      {movie?.listUserRating?.length} reviews )
                     </span>
                   </div>
                 </div>

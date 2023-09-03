@@ -26,6 +26,7 @@ const AddFilm = ({ categories }) => {
     title: yup.string().required(),
     author: yup.string().required(),
     actors: yup.string().required(),
+    awards: yup.string().required(),
     category: yup.array().required(),
     timeVideo: yup.string().required(),
     photo: yup.string().required(),
@@ -63,7 +64,9 @@ const AddFilm = ({ categories }) => {
   const becomeSlug = (str) => {
     const nonDiacriticString = str
       .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "");
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace("Đ", "D")
+      .replace("đ", "d");
     const withoutSpaces = nonDiacriticString.replace(/\s+/g, "-");
     return withoutSpaces.toLowerCase();
   };
@@ -204,6 +207,16 @@ const AddFilm = ({ categories }) => {
               {<span className="text-red-500">{errors.actors?.message}</span>}
             </div>
             <div className="col-span-2">
+              <label className="inline-block mb-1">Giải thưởng</label>
+              <input
+                type="text"
+                className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-primary-600 block w-full p-2.5"
+                placeholder="..."
+                {...register("awards", { required: true })}
+              />
+              {<span className="text-red-500">{errors.awards?.message}</span>}
+            </div>
+            <div className="col-span-2">
               <label className="inline-block mb-1">Poster</label>
               <input
                 type="text"
@@ -233,6 +246,21 @@ const AddFilm = ({ categories }) => {
               />
               {<span className="text-red-500">{errors.quality?.message}</span>}
             </div>
+            <div className="col-span-1 border-[1px] border-black text-center my-auto">
+              <input
+                type="checkbox"
+                id="yellow-checkbox"
+                className="w-4 h-4 text-yellow-400 bg-gray-100 border-gray-300 rounded cursor-pointer"
+                {...register("isPaid")}
+              />
+              <label
+                htmlFor="yellow-checkbox"
+                className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300 cursor-pointer"
+              >
+                isPaid
+              </label>
+              {<span className="text-red-500">{errors.isPaid?.message}</span>}
+            </div>
             <div className="col-span-2">
               <label className="inline-block mb-1">Miêu tả</label>
               <textarea
@@ -244,12 +272,14 @@ const AddFilm = ({ categories }) => {
             </div>
           </div>
 
-          <button
-            type="submit"
-            className="mt-2 text-white bg-black hover:opacity-70 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-          >
-            Thêm phim
-          </button>
+          <div className="flex justify-end items-center">
+            <button
+              type="submit"
+              className="mt-2 text-white bg-black hover:opacity-70 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+            >
+              Thêm phim
+            </button>
+          </div>
         </form>
 
         <UploadVideo />

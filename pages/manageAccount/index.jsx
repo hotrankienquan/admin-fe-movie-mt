@@ -10,6 +10,8 @@ import { getAllMovies, getAllUsers } from "../../services/adminRequest";
 import ProtectedRoute from "../../utils/ProtectedRoutes";
 import LayoutRoot from "../../components/layout";
 import Pagination from "../../components/Pagination";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // const arrAccount = [
 //   {
@@ -68,7 +70,6 @@ const ManageAccount = () => {
   const { filterDisabled, filterSort, filterIsAdmin } = formFilter;
   // console.log(">>> filterDisabled <<<", filterDisabled);
   // console.log(">>> filterSort <<<", filterSort);
-
   const handleSearchInput = async (e) => {
     const { name, value } = e.target;
     setSearchInput(value);
@@ -144,7 +145,6 @@ const ManageAccount = () => {
     currentPage,
     pageSize,
     searchInput,
-    accessToken,
     formFilter,
     filterDisabled,
     filterSort,
@@ -269,21 +269,22 @@ const ManageAccount = () => {
                     item={item}
                     index={index}
                     setArrAccount={setArrAccount}
+                    toast={toast}
                   />
                 ))}
               </tbody>
             </table>
           </div>
 
-          <div className="mt-4 flex items-center justify-end">
-            <Pagination
-              paginationData={{
-                currentPage,
-                totalPages,
-                setCurrentPage: setCurrentPage,
-              }}
-            />
-          </div>
+          <Pagination
+            paginationData={{
+              currentPage,
+              totalPages,
+              setCurrentPage: setCurrentPage,
+            }}
+          />
+
+          <ToastContainer />
         </div>
       </LayoutRoot>
     </ProtectedRoute>

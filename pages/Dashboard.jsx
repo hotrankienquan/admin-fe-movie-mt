@@ -7,7 +7,7 @@ export default function Dashboard() {
   const textArr = [
     "Chào mừng",
     "Chào mừng Các bạn",
-    "Chào mừng Các bạn Đến với Movie The Stone",
+    "Chào mừng Các bạn Đến với Movie Short Flicks",
   ];
   return (
     <div className="px-[12px]">

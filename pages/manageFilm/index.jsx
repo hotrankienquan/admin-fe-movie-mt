@@ -10,6 +10,8 @@ import Movie from "./components/Movie";
 import { createAxios } from "../../utils/createInstance";
 import { getAllMovies } from "../../services/adminRequest";
 import ProtectedRoute from "../../utils/ProtectedRoutes";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // const arrMovies = [
 //   {
@@ -76,6 +78,8 @@ const ManageFilm = ({}) => {
     filterDisabled: "",
     filterSort: 0,
   });
+  console.log("render");
+
   //   console.log(formFilter);
   const { filterDisabled, filterSort } = formFilter;
   // console.log(">>> filterDisabled <<<", filterDisabled);
@@ -264,21 +268,22 @@ const ManageFilm = ({}) => {
                     item={item}
                     index={index}
                     setArrMovies={setArrMovies}
+                    toast={toast}
                   />
                 ))}
               </tbody>
             </table>
           </div>
 
-          <div className="mt-4 flex items-center justify-end">
-            <Pagination
-              paginationData={{
-                currentPage,
-                totalPages,
-                setCurrentPage: setCurrentPage,
-              }}
-            />
-          </div>
+          <Pagination
+            paginationData={{
+              currentPage,
+              totalPages,
+              setCurrentPage: setCurrentPage,
+            }}
+          />
+
+          <ToastContainer />
         </div>
       </LayoutRoot>
     </ProtectedRoute>

@@ -4,10 +4,8 @@ import { deleteMovie, disabledMovie } from "../../../services/adminRequest";
 import { createAxios } from "../../../utils/createInstance";
 import { useStore } from "../../../zustand/store";
 import { useRouter } from "next/router";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
-const Movie = ({ item, index, setArrMovies }) => {
+const Movie = ({ item, index, setArrMovies, toast }) => {
   const router = useRouter();
   const info = useStore((store) => store.info);
   //   console.log(info[0]);
@@ -25,11 +23,11 @@ const Movie = ({ item, index, setArrMovies }) => {
             prevMovies.filter((movie) => movie._id !== movieId)
           );
         }
-        alert(res?.data);
+        toast(res?.data);
       }
     } catch (err) {
       console.log(err);
-      alert(err);
+      toast(err);
     }
   };
 
@@ -58,7 +56,7 @@ const Movie = ({ item, index, setArrMovies }) => {
         });
         return updatedMovies;
       });
-      alert(res?.data?.message);
+      toast(res?.data?.message);
     } catch (err) {
       console.log(err);
     }

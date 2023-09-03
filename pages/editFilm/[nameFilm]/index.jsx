@@ -14,10 +14,10 @@ import LayoutRoot from "../../../components/layout";
 import UploadVideo from "../../uploadVideo";
 import UploadPhotos from "../../uploadPhoto";
 
-const EditFilm = ({ categories, nameFilm, singleMovie }) => {
+const EditFilm = ({ categories, nameFilm }) => {
   // console.log(nameFilm);
   // console.log(categories);
-  const [movieEdit, setMovieEdit] = useState();
+  const [movieEdit, setMovieEdit] = useState({});
   console.log(movieEdit);
   const options = categories.map((category) => ({
     value: category._id,
@@ -29,6 +29,7 @@ const EditFilm = ({ categories, nameFilm, singleMovie }) => {
     title: yup.string().required(),
     author: yup.string().required(),
     actors: yup.string().required(),
+    awards: yup.string().required(),
     category: yup.array().required(),
     timeVideo: yup.string().required(),
     photo: yup.string().required(),
@@ -55,15 +56,22 @@ const EditFilm = ({ categories, nameFilm, singleMovie }) => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  //   const [password] = watch(["password"]);
+  const [isPaid] = watch(["isPaid"]);
+  console.log("isPaid", isPaid);
 
   const removeAccents = (str) => {
-    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    return str
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace("Đ", "D")
+      .replace("đ", "d");
   };
   const becomeSlug = (str) => {
     const nonDiacriticString = str
       .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "");
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace("Đ", "D")
+      .replace("đ", "d");
     const withoutSpaces = nonDiacriticString.replace(/\s+/g, "-");
     return withoutSpaces.toLowerCase();
   };
@@ -82,7 +90,7 @@ const EditFilm = ({ categories, nameFilm, singleMovie }) => {
 
     const dataFilm = {
       ...data,
-      id: singleMovie._id,
+      id: movieEdit._id,
       slug,
       titleWithoutAccent,
       authorWithoutAccent,
@@ -93,33 +101,49 @@ const EditFilm = ({ categories, nameFilm, singleMovie }) => {
   };
 
   useEffect(() => {
-    setMovieEdit(singleMovie);
-  }, []);
+    const renderSingleMovie = async () => {
+      try {
+        const movie = await axiosJWT.get(
+          `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/admin/${nameFilm}`,
+          {
+            headers: { token: `Bearer ${accessToken}` },
+          }
+        );
 
-  useEffect(() => {
-    if (singleMovie) {
-      const movieFields = {
-        title: singleMovie.title,
-        yearPublish: singleMovie.yearPublish,
-        category: singleMovie.category.map((category) => ({
-          value: category._id,
-          label: category.name,
-        })),
-        timeVideo: singleMovie.timeVideo,
-        country: singleMovie.country,
-        author: singleMovie.author.join(", "),
-        actors: singleMovie.actors.join(", "),
-        photo: singleMovie.photo.join(""),
-        video: singleMovie.video.join(""),
-        quality: singleMovie.quality,
-        desc: singleMovie.desc,
-      };
+        console.log(">>> Results <<<", movie);
+        if (movie.data.code === 200) {
+          const singleMovie = movie.data.data.movieSingle[0];
+          const movieFields = {
+            title: singleMovie.title,
+            yearPublish: singleMovie.yearPublish,
+            category: singleMovie.category.map((category) => ({
+              value: category._id,
+              label: category.name,
+            })),
+            timeVideo: singleMovie.timeVideo,
+            country: singleMovie.country,
+            author: singleMovie.author.join(", "),
+            actors: singleMovie.actors.join(", "),
+            awards: singleMovie.awards.join(", "),
+            photo: singleMovie.photo.join(""),
+            video: singleMovie.video.join(""),
+            quality: singleMovie.quality,
+            desc: singleMovie.desc,
+            isPaid: singleMovie.isPaid,
+          };
 
-      for (const field in movieFields) {
-        setValue(field, movieFields[field]);
+          for (const field in movieFields) {
+            setValue(field, movieFields[field]);
+          }
+
+          setMovieEdit(singleMovie);
+        }
+      } catch (err) {
+        console.log(err);
       }
-    }
-  }, []);
+    };
+    renderSingleMovie();
+  }, [nameFilm]);
 
   return (
     <LayoutRoot>
@@ -156,20 +180,6 @@ const EditFilm = ({ categories, nameFilm, singleMovie }) => {
             </div>
             <div className="col-span-1">
               <label className="inline-block mb-1">Thể loại</label>
-              {/* <input
-                type="text"
-                className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-primary-600 block w-full p-2.5"
-                placeholder="..."
-                {...register("category", { required: true })}
-              /> */}
-              {/* <Select
-                isMulti
-                options={options}
-                className="basic-multi-select bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-primary-600 block w-full p-2.5"
-                classNamePrefix="select"
-                {...register("category", { required: true })}
-              /> */}
-
               <Controller
                 name="category"
                 control={control}
@@ -183,7 +193,6 @@ const EditFilm = ({ categories, nameFilm, singleMovie }) => {
                     }}
                   />
                 )}
-                // {...register("category", { required: true })}
               />
               {<span className="text-red-500">{errors.category?.message}</span>}
             </div>
@@ -233,6 +242,16 @@ const EditFilm = ({ categories, nameFilm, singleMovie }) => {
               {<span className="text-red-500">{errors.actors?.message}</span>}
             </div>
             <div className="col-span-2">
+              <label className="inline-block mb-1">Giải thưởng</label>
+              <input
+                type="text"
+                className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:border-primary-600 block w-full p-2.5"
+                placeholder="..."
+                {...register("awards", { required: true })}
+              />
+              {<span className="text-red-500">{errors.awards?.message}</span>}
+            </div>
+            <div className="col-span-2">
               <label className="inline-block mb-1">Poster</label>
               <input
                 type="text"
@@ -262,6 +281,21 @@ const EditFilm = ({ categories, nameFilm, singleMovie }) => {
               />
               {<span className="text-red-500">{errors.quality?.message}</span>}
             </div>
+            <div className="col-span-1 border-[1px] border-black text-center my-auto">
+              <input
+                type="checkbox"
+                id="yellow-checkbox"
+                className="w-4 h-4 text-yellow-400 bg-gray-100 border-gray-300 rounded cursor-pointer"
+                {...register("isPaid")}
+              />
+              <label
+                htmlFor="yellow-checkbox"
+                className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300 cursor-pointer"
+              >
+                isPaid
+              </label>
+              {<span className="text-red-500">{errors.isPaid?.message}</span>}
+            </div>
             <div className="col-span-2">
               <label className="inline-block mb-1">Miêu tả</label>
               <textarea
@@ -273,12 +307,14 @@ const EditFilm = ({ categories, nameFilm, singleMovie }) => {
             </div>
           </div>
 
-          <button
-            type="submit"
-            className="mt-2 text-white bg-black hover:opacity-70 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-          >
-            Lưu
-          </button>
+          <div className="flex justify-end items-center">
+            <button
+              type="submit"
+              className="mt-2 text-white bg-black hover:opacity-70 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+            >
+              Lưu
+            </button>
+          </div>
         </form>
 
         <UploadVideo />
@@ -296,14 +332,14 @@ export async function getServerSideProps(context) {
   let allCategory = await axios.get(
     `${process.env.NEXT_PUBLIC_URL}/api/v1/category`
   );
-  let singleMovie = await axios.get(
-    `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/${nameFilm}`
-  );
+  // let singleMovie = await axios.get(
+  //   `${process.env.NEXT_PUBLIC_URL}/api/v1/movie/user/${nameFilm}`
+  // );
   return {
     props: {
       nameFilm,
       categories: allCategory.data.data,
-      singleMovie: singleMovie.data.data.movieSingle[0],
+      // singleMovie: singleMovie.data.data.movieSingle[0],
     },
   };
 }
